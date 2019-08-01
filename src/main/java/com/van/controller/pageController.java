@@ -26,18 +26,18 @@ public class pageController {
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("/hello")
-    public String Hello(){
+    public String Hello() {
         return "hello world!";
     }
 
     @RequestMapping("/login")
-    public JSONObject Login(){
+    public JSONObject Login() {
         List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from student");
         return BaseResult.success(list);
     }
 
     @RequestMapping("/logout")
-    public JSONObject logout(){
-        return BaseResult.success("this is successful page");
+    public void logout() {
+
     }
 }
