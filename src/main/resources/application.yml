@@ -1,6 +1,71 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /Fseat  #项目访问路径
+
+logging:
+  level:
+    com.van: trace  #设置为trace级别
+  file: springboot.log  #不指定路径，在当前项目下生成，也可以指定完成的路径
+#  path: /spring/log
+  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" #输出格式
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} -> [%thread] %-5level %logger{50} - %msg%n"  #输出格式
+
+
 spring:
+
   datasource:
     username: root
     password: 123456
     url: jdbc:mysql://47.107.80.17:3306/waimai
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  redis:
+    host: 47.107.80.17
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 0
+
+  profiles:
+    active: dev  #profile.active方式激活dev profile
+    #启动方式2，命令行启动(运行程序时）：运行程序时，在Program Arguments 输入框中加入 --spring.profiles.active=dev
+    #启动方式3，命令行启动(运行jar包时）：java -jar Fseat-0.0.1-SHAPSHOT.jar --spring.profiles.active=dev
+    #启动方式4，虚拟机参数：在VM options 输入框中加入  -Dspring.profiles.active=dev
+
+person:
+  name: 张三${random.uuid}
+  age: 18
+  boos: false
+  birth: 2016/6/8
+  maps: {k1: v1,k2: v2}
+  lists:
+    - lisi
+    - zhangsan
+  dog:
+    name: ${person.name}_小狗
+#   name: ${person.sex: hello}_小狗  没有配置person.sex，如果占位符取不到值，可以使用"："指定默认值
+    age: 5
+
+#开启springboot的debug模式，让控制台打印自动配置报告，可以很方便地知道哪些自动配置类生效，默认为false
+#debug: true
+
+# " --- " 表示多文档块，相当于新建多个yml文件
+---
+spring:
+  profiles: dev
+
+server:
+  port: 8082
+
+---
+spring:
+  profiles: prod
+
+server:
+  port: 8083

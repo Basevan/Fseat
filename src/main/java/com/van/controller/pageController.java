@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.van.model.User;
 import com.van.utils.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author TangFuwan
@@ -23,13 +25,15 @@ import java.util.Map;
  */
 @CrossOrigin(origins = {"*","null"})
 @RestController
-@RequestMapping("/Fseat")
 public class pageController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/hello")
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @GetMapping("/hello- world")
     public String Hello() {
         return "hello world!";
     }
@@ -58,6 +62,22 @@ public class pageController {
 
     @RequestMapping("/logout")
     public void logout() {
+
+    }
+
+    @RequestMapping("/redis")
+    public String testRedis(){
+        User user = new User();
+        user.setUserName("basevan");
+        user.setPhone("15730037233");
+        user.setUserMail("183320926@qq.com");
+        redisTemplate.opsForValue().set("user",JSONObject.toJSONString(user),50, TimeUnit.SECONDS);
+
+        User user1 = JSONObject.parseObject(redisTemplate.opsForValue().get("user"),User.class);
+
+        System.out.println(user1);
+
+        return redisTemplate.opsForValue().get("user");
 
     }
 }
